@@ -7,6 +7,7 @@
              
 #################
 
+#' @export
 phi1 <- function(dat, at) {
   #1) Once vaccination campaign starts, fxn changes vaccination status (attribute "phi") from 
   # NA to "1" to eligibe/selected agents.
@@ -60,6 +61,7 @@ phi1 <- function(dat, at) {
 }
 #######################
 
+#' @export
 update_mu1 <- function (dat,at){
   #code to initialize/update  mu,sigma for each agent or initialize for new agents to model
   # for model 1, this fxn just returns dat object without modification (no mu,sigma to update)
@@ -71,6 +73,7 @@ update_mu1 <- function (dat,at){
 }
 #######################
 
+#' @export
 covariates1 <- function(dat,at){
   #initializupdate baseline covariates necessary for vaccine model's "calculate_theta" fxn
   #that are not already part of baseline evonete/
@@ -83,6 +86,7 @@ covariates1 <- function(dat,at){
 }
 ######################
 
+#' @export
 marks1 <- function(dat,at){
   #at start of model, initialize "marks" for each agent
   #after start, for given agent specific mu/sigma in dat$mu and dat$sigma,
@@ -96,6 +100,7 @@ marks1 <- function(dat,at){
   
 }
 ######################
+#' @export
 draw_m1 <- function(dat,at){
   # calculate marks, based on  most current values of mu and sigma 
   
@@ -106,6 +111,7 @@ draw_m1 <- function(dat,at){
 }
 #######################
 
+#' @export
 caclulate_theta1 <- function(dat){
   # draw updated marks (of virus)
   # then caclulate theta based on dat$m, dat$phi, dat$covariates
