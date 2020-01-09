@@ -31,7 +31,9 @@ result <- result * susceptibility     # New for AgeAndSPVL work
 result[which(acute_phase_status==1)] <- result[which(acute_phase_status==1)] * dat$param$trans_RR_acute_phase
 result[which(sti_status_sus==1)] <- result[which(sti_status_sus==1)] * dat$param$trans_RR_STI
 result[which(condom_use==1)] <- result[which(condom_use==1)] * dat$param$trans_RR_uses_condoms
-result[which(vacc_sens_sus==1)] <-  result[which(vacc_sens_sus==1)] *dat$param$trans_RR_vaccine
+
+#for vaccination branch, vaccination dynamics occurs elsewhere, comment out vaccine effects
+#result[which(vacc_sens_sus==1)] <-  result[which(vacc_sens_sus==1)] *dat$param$trans_RR_vaccine
 
 # Age effect
 temp_age_xb <-  dat$param$trans_RR_age^((age_vec_sus-dat$param$trans_base_age)/10)

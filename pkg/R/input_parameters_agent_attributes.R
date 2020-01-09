@@ -57,14 +57,10 @@ input_parameters_agent_attributes <-function(){
     "virus_part_res_drug",              "virus_3_plus_drug_muts",
     "virus_3_plus_drug_muts",             "Aim3RoundingErrors",               
      "aim3_mutations_long",             "CYP_6_slow",
-    
-# -- testing for and treatment of drug resistant viruses (aim 3) --- #    
-    "eligible_2nd_line_ART",
-    "treated_2nd_line",  
-    "diag_resist_status",
-    "diag_resist_time", 
-    "last_neg_resist_test",
-    "time_init_2nd_line",
+
+# -- "new" vaccine code--- #    
+    "phi",                              "mu",
+    "sigma",
 
 # -- therapeutic vaccine --- #    
    "LogSetPoint_genotype",             "vacc_status_at_inf",
