@@ -11,13 +11,13 @@
 #' example function call here
 ########################################################
 #' @export
-transmission_bookkeeping_module <- function(dat,timeIndex)
+transmission_bookkeeping_module <- function(dat,at)
 {
   
   #Description:
   # for agents newly infecteds in transmission_main_module, fills in all viral related 
   # variables, e.g., initial VL, SPVL, donor's SPVL
-  # Input: discord_coital_df, timeIndex, param$V0, pop$ViralContribToLogSP0,
+  # Input: discord_coital_df, at, param$V0, pop$ViralContribToLogSP0,
   # param$MutationVariance, param$VarianceLogSP0, param$start_treatment_campaign,
   # param$zero_heritability_tx, popsumm, param$h, pop$Generation, param$disclosure_prob
   # Output:pop$Time_Inf, pop$V, pop$treated, pop$ViralContribToLogSP0, 
@@ -40,8 +40,8 @@ transmission_bookkeeping_module <- function(dat,timeIndex)
   recipient <- dat$discord_coital_df$sus_id[index]
   infector <- dat$discord_coital_df$inf_id[index]
   
-  dat$pop$Time_Inf[recipient] <- timeIndex
-  dat$pop$Time_Inf_Adj[recipient] <- timeIndex
+  dat$pop$Time_Inf[recipient] <- at
+  dat$pop$Time_Inf_Adj[recipient] <- at
   dat$pop$V[recipient] <- dat$param$V0
   
   # If treatment provision is based on "time_dist", assign agent-specific min time to trtmnt
@@ -75,7 +75,7 @@ transmission_bookkeeping_module <- function(dat,timeIndex)
     #NOTE: this section must go after initial calcs for agent's LogSetPoint and SetPoint
     #"actual" spvl is now "LogSetPoint_genotype",
     # while phenotypic spvl is standard "LogSetPoint"
-    if(timeIndex >=  dat$param$start_vacc_campaign[1] & dat$param$vacc_therapeutic_campaign==T){
+    if(at >=  dat$param$start_vacc_campaign[1] & dat$param$vacc_therapeutic_campaign==T){
       #agents just got infected and are vaccinated (indexing recipient vector)
       vaccinated <- which(dat$pop$vaccinated[recipient]==1)
       if(length(vaccinated)>0){
@@ -185,7 +185,7 @@ transmission_bookkeeping_module <- function(dat,timeIndex)
   dat$pop$Donors_ViralContribToLogSP0[recipient] <- dat$pop$ViralContribToLogSP0[infector]
   dat$pop$Donors_EnvirContribToLogSP0[recipient] <- dat$pop$EnvirContribToLogSP0[infector]
   dat$pop$Donors_d_acute[recipient] <- dat$pop$d_acute[infector]
-  dat$pop$Donors_Total_Time_Inf_At_Trans[recipient] <- timeIndex - dat$pop$Time_Inf[infector]
+  dat$pop$Donors_Total_Time_Inf_At_Trans[recipient] <- at - dat$pop$Time_Inf[infector]
   dat$pop$Donors_V[recipient] <- dat$pop$V[infector]
   dat$pop$Donors_Generation[recipient] <- dat$pop$Generation[infector]
   dat$pop$Donors_SetPoint[recipient] <- dat$pop$SetPoint[infector]
@@ -203,11 +203,15 @@ transmission_bookkeeping_module <- function(dat,timeIndex)
   dat$pop$age_infection[recipient] <- dat$pop$age[recipient]
   dat$pop$vacc_status_at_inf[recipient] <- dat$pop$vaccinated[recipient]
   
+  temp_fxn<- paste("marks",dat$param$vaccine_model_id,sep="")
+  dat$pop$m[recipient] <- do.call(temp_fxn,list(dat,infector,at))
+  
+  
   #############################################
   
   #save recipient / infector info if desired
   if(dat$param$save_infection_matrix){
-    dat$InfMat[[timeIndex]] <- cbind(timeIndex,recipient,  infector)
+    dat$InfMat[[at]] <- cbind(at,recipient,  infector)
   }
   
   #assign disclosure status of newly infected (do they tell partner hiv status)
@@ -221,9 +225,9 @@ transmission_bookkeeping_module <- function(dat,timeIndex)
   dat$attr$status[temp_which2] <- "i"
   
   #summary stats of spvl for newly infecteds for timestep 
-  #dat$popsumm$mean_spvl_incident[timeIndex]  <- mean(dat$pop$LogSetPoint[recipient])
-  #dat$popsumm$median_spvl_incident[timeIndex] <- median(dat$pop$LogSetPoint[recipient])
-  #dat$popsumm$variance_spvl_incident[timeIndex] <- var(dat$pop$LogSetPoint[recipient])
+  #dat$popsumm$mean_spvl_incident[at]  <- mean(dat$pop$LogSetPoint[recipient])
+  #dat$popsumm$median_spvl_incident[at] <- median(dat$pop$LogSetPoint[recipient])
+  #dat$popsumm$variance_spvl_incident[at] <- var(dat$pop$LogSetPoint[recipient])
   
   return(dat)
 }

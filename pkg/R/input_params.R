@@ -388,7 +388,7 @@ input_params<-function(
  #"vaccination" fxn
     preventative_campaign    = F,
     start_vacc_campaign      = 5e5,
-    perc_vaccinated          = 0.99,
+    perc_vaccinated_rate          = 0.99, #daily proportion of eligible recipients that will be vaccinated
     max_perc_vaccinated  =       1.0, #maximum proportion of alive pop to vaccinate
     target_vacc_att          = FALSE,
     vacc_eff_duration        =  365*3,
@@ -400,6 +400,9 @@ input_params<-function(
     spvl_decrement_vaccine    = 1.0,
     vacc_multi_eff           = F, # flag for vaccine model with distribution of vaccine efficacies
     vacc_multi_fxn = "function(xx,...){runif(xx)}", #function to determine values of vaccine efficacies for "vacc_mulit_eff" models, default is random 
+    vaccine_model_id=1, #for Paul and Josh's vaccine model, currently only one model (1) but in future 1,2,3...
+    vacc_trans_prob_decrease = 1, # percentage (proportion) decrease in transm. probs due to vaccination for
+                                  # vaccine model 1
 #coital acts module
   #social_coital-acts
     prob_sex_by_age          = FALSE,

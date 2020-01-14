@@ -129,20 +129,12 @@ summary_popsumm<-function(dat,at){
     new_infections_virus_1_drug_muts <- length(which(is.element(dat$pop$Time_Inf, time_index) &
                                                        dat$pop$virus_3_plus_drug_muts==1))
 
+    #  percent_donor_acute (cumulative percentage)
+    index <- which(!is.na(dat$pop$Donors_Total_Time_Inf_At_Trans))
+    donor_time_inf <- dat$pop$Donors_Total_Time_Inf_At_Trans[index] 
+    donor_time_inf_count <- length(which(donor_time_inf <= dat$param$t_acute))
+    dat$popsumm$percent_donor_acute[popsumm_index]<- donor_time_inf_count/length(index)
 
- if(new_infections_count>0){
-   
-  donor_time_inf <- dat$pop$Time_Inf[which(new_infections)]-dat$pop$Donors_Total_Time_Inf_At_Trans[which(new_infections)] 
-  donor_time_inf_index <- which(donor_time_inf <= dat$param$t_acute)
-  donor_acute_count <- length(donor_time_inf_index)  
-  if(donor_acute_count>0){
-    dat$popsumm$percent_donor_acute[popsumm_index]<- donor_acute_count/new_infections_count
-  }else{
-    dat$popsumm$percent_donor_acute[popsumm_index] <- 0
-  }
-  
- }
-        
     new_births <- is.element(dat$pop$arrival_time, time_index)
     cd4_aids <- dat$pop$CD4 == 4
     new_diagnoses <- dat$pop$diag_status == 1 &  is.element(dat$pop$diag_time,time_index)

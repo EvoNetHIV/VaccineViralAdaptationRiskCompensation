@@ -126,8 +126,14 @@ initialize_infecteds_vl <- function(dat,at)
 
   #for model runs with vaccination campaigns,
   #assigns sensitivity status of virus (0/1) to vaccine
-  pop$virus_sens_vacc[ind] <- rbinom(length(ind),1,
-                              prob=dat$param$perc_virus_vaccine_sens)
+  
+  #original vaccine model
+  #pop$virus_sens_vacc[ind] <- rbinom(length(ind),1,
+  #                            prob=dat$param$perc_virus_vaccine_sens)
+  temp_fxn<- paste("marks",dat$param$vaccine_model_id,sep="")
+  pop$m[ind] <- do.call(temp_fxn,list(dat,ind,at))
+  
+  
   
   if(dat$param$vacc_multi_eff){
     pop$vacc_eff[ind] <- do.call(eval(parse(text=dat$param$vacc_multi_fxn)),list(length(ind)))
@@ -144,33 +150,8 @@ initialize_infecteds_vl <- function(dat,at)
   #will not be computed
   #this gives those in aids, a value halfway in log10 space between
   # spvl and max aids vl
-  if(param$VL_Function!="aim3"){
-    aids_index <-  which(timeIndex > ( pop$Time_Inf[ind] +pop$RandomTimeToAIDS[ind]))
-    if(length(aids_index)>0){
-      pop$V[aids_index]<- pop$SetPoint[aids_index] + param$vl_max_aids  # Fixes obvious error in original
-    }
-  }
-  
-  ###############################
-  #Aim3 dynamics
-  
-  initial_vec <- rep(0,"^"(2, param$Max_Allowable_Loci))                
-  pop$V_vec[ind,] <- initial_vec
-  pop$I_vec[ind,] <- initial_vec
-  pop$M_vec[ind,] <- initial_vec
-  pop$L_vec[ind,] <- initial_vec
-  
-  pop$V_vec[ind,1] <- pop$V[ind] # Assume 100% WT at time 0. (everything else left at zero)
-  pop$I_vec[ind,1] <- pop$V[ind] * param$c / param$p_inf_cells
-  
-  pop$CD4count[ind] <- param$s_CD4 /param$m_CD4 # Initial concentration of CD4 T-cells
-  pop$CD4tot[ind] <- param$s_CD4 /param$m_CD4 # Initial concentration of CD4 T-cells
-  pop$Imm_Trig[ind] <- 0
-  pop$ChronPhase[ind] <- 0
-  pop$OnDrug[ind] <- 0
-  pop$K[ind] <- pop$SetPoint[ind]
-  pop$CD4count[ind] <- 1000
-  
+
+
   dat$pop <- pop
   return(dat)
   }

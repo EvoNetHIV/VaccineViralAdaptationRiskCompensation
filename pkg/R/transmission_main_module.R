@@ -144,12 +144,23 @@ transmission_main_module <- function(dat,at)
   ###################################
   #Vaccine dynamics
   
+
+  if(at>  dat$param$start_vacc_campaign[1]){
+    
+    #temp qaqc to be removed
+    #if(at ==  (dat$param$start_vacc_campaign[1]+200)){browser()}
+    
+    dat$infector_id <-   inf_id 
+    dat$susceptible_id <- sus_id
+    
   #calculate theta based on user-specified vaccine model (1,2,3,...)
-  temp_fxn<- paste("caclulate_theta",dat$param$vaccine_model_id,sep="")
+  temp_fxn<- paste("calculate_theta",dat$param$vaccine_model_id,sep="")
   theta <- do.call(temp_fxn,list(dat))
-  
   #adjust raw transmission probabilities
   trans_probs <- trans_probs_raw*(1-theta)    
+  }else{
+    trans_probs <- trans_probs_raw
+  }
   
   ###################################
   # fill in discord_coital_df

@@ -60,7 +60,7 @@ input_parameters_agent_attributes <-function(){
 
 # -- "new" vaccine code--- #    
     "phi",                              "mu",
-    "sigma",
+    "sigma",                            "m",
 
 # -- therapeutic vaccine --- #    
    "LogSetPoint_genotype",             "vacc_status_at_inf",
