@@ -11,19 +11,16 @@ max_perc_vaccinated =0.99 #maximum proportion of population eligible for vaccina
 param_list=list(
   nsims            = 1,
   ncores           = 1,
-  popsumm_frequency  = 30,
+  popsumm_frequency  = 30, #frequency of timesteps (days) to calculate summrary stats
   fast_edgelist      = TRUE,
-  save_partner_list  = FALSE,
-  #vl_peak_agent_flag = TRUE,
-  trans_RR_age       = 1.0,
   min_spvl_allowed = .5,
   n_steps           = 365*30,
   initial_pop       = initial_pop,
   initial_infected  = initial_pop*.10,
   target_stats         = initial_pop*0.7/2,
-  #nw_form_terms = "~edges + offset(nodematch('role', diff=TRUE, keep=1:2))"  ,
   vl_peak_agent_flag   = TRUE,  #default FALSE
-#Vaccine parameters ----------------------------------------- #
+
+  #Vaccine parameters ----------------------------------------- #
   start_vacc_campaign =  (10*365):(50*365),
   max_perc_vaccinated = max_perc_vaccinated , #maximum percent/proportion of population to be vaccinated
   perc_vaccinated_rate = (max_perc_vaccinated /(1-max_perc_vaccinated ))/(years_to_max_coverage*365),
@@ -48,12 +45,12 @@ evoparams <- do.call(evonet_setup,param_list)
 #}
 ########################
 
+vaccine_modules <- paste(c("phi", "update_mu","covariates"),evoparams$vaccine_model_id,sep="")
+
 modules <- c(
    "aging",
   "testing",
-  "phi1",
-  "update_mu1",
-  "covariates1",
+  c(vaccine_modules),
   "treatment",
   "viral_update",
   "coital_acts",
